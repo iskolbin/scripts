@@ -10,17 +10,23 @@ if [ -z $2 ]; then
 	exit
 fi
 
+if [ ! -f ~/.tinypng_apikey ]; then
+	echo 'Put your TinyPNG API key into ~/.tinypng_apikey'
+ 	exit
+fi	
+
+api_key=$(cat ~/.tinypng_apikey)
+
 function upload {
 	echo $(curl https://api.tinify.com/shrink \
-		--user api:1N6nx6O8rVYFSSYSoXORZOqteDejRlq0 \
+		--user api:$api_key \
 		--dump-header /dev/stdout \
 		--data-binary @$1 | grep Location | awk '{print $2}' | dos2unix )
 }
 
 function download {
 	curl $1 \
-		--user api:1N6nx6O8rVYFSSYSoXORZOqteDejRlq0 \
-		--dump-header /dev/stdout \
+		--user api:$api_key \
 		--output $2
 }
 
