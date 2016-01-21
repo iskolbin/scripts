@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ -z $1 ]; then
+	echo 'Usage: tinypng <input> <output>'
+	exit
+fi
+
+if [ -z $2 ]; then
+	echo 'Usage: tinypng <input> <output>'
+	exit
+fi
+
+function upload {
+	echo $(curl https://api.tinify.com/shrink \
+		--user api:1N6nx6O8rVYFSSYSoXORZOqteDejRlq0 \
+		--dump-header /dev/stdout \
+		--data-binary @$1 | grep Location | awk '{print $2}' | dos2unix )
+}
+
+function download {
+	curl $1 \
+		--user api:1N6nx6O8rVYFSSYSoXORZOqteDejRlq0 \
+		--dump-header /dev/stdout \
+		--output $2
+}
+
+download $(upload $1) $2
